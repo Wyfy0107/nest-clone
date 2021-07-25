@@ -1,6 +1,7 @@
-import { Post } from './../decorators/index'
+import { Injectable, Post } from './../decorators/index'
 import { StudentDto } from './student.controller'
 
+@Injectable()
 export class StudentService {
   constructor() {}
 

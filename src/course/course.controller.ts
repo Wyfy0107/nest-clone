@@ -4,6 +4,8 @@ import { Request } from 'express'
 import { Body, Controller, Get, Post, Req } from '../decorators'
 import { IsEmail, IsNumber, IsPositive, IsString } from 'class-validator'
 
+import { CourseService } from './course.service'
+
 class CourseDto {
   @IsString()
   name!: string
@@ -15,11 +17,11 @@ class CourseDto {
 
 @Controller('/course')
 export class CourseController {
-  constructor() {}
+  constructor(private service: CourseService) {}
 
   @Get('/')
-  getCourse(@Req() req: Request) {
-    return 'hello world'
+  getCourses() {
+    return this.service.getCourses()
   }
 
   @Post('/')

@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "watch:dev": "tsc --watch"
+    "watch:dev": "tsc --pretty true --watch",
+    "start:dev": "concurrently -n \"typescript\" -c \"yellow\" \"yarn run watch:dev\" \"yarn run start:watch\"",
+    "start:watch": "nodemon dist/main.js"
   },
   "dependencies": {
     "@types/express": "^4.17.13",

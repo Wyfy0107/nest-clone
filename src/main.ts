@@ -1,25 +1,35 @@
 import express from 'express'
 import 'reflect-metadata'
 
+import { plainToClass } from 'class-transformer'
+import { validate } from 'class-validator'
+
 import {
   BodyDto,
   ClassType,
   ControllerPathPrefix,
   HandlerMapping,
+  ModuleOptions,
   WithBody,
   WithReq,
 } from './const'
 import { getInstanceMethodNames } from './util/index'
 import { Injector } from './container'
-import { CourseController } from './course/course.controller'
 import { Classes, HandlerConfig } from './types'
-import { plainToClass } from 'class-transformer'
-import { validate } from 'class-validator'
+import { AppModule } from './app.module'
 
-const controllers: any[] = [CourseController]
-
-export const bootstrap = <T>() => {
+export const bootstrap = <T>(appModule: Type<any>) => {
   const injector = new Injector()
+  const imports = Reflect.getMetadata(ModuleOptions, AppModule)
+    .imports as Type<any>[]
+  const controllers = imports
+    .map(cls => {
+      const moduleControllers = Reflect.getMetadata(ModuleOptions, cls)
+        .controllers as Type<any>[]
+
+      return moduleControllers
+    })
+    .flat(1)
 
   const injected = controllers.map(c => {
     return injector.resolve<typeof c>(c)
@@ -39,6 +49,7 @@ export const bootstrap = <T>() => {
     methodNames.map(method => {
       const methodMapping: HandlerConfig = Reflect.getMetadata(
         HandlerMapping,
+        //@ts-ignore
         instance[method]
       )
 
@@ -54,6 +65,10 @@ export const bootstrap = <T>() => {
 
       if (dto) {
         app.use(`${pathPrefix}${path}`, async (req, res, next) => {
+          if (req.method.toLowerCase() !== handlerMethod.toLowerCase()) {
+            return next()
+          }
+
           const convert = plainToClass(dto, req.body)
           const errors = await validate(convert)
           if (errors.length > 0) {
@@ -94,6 +109,7 @@ export const bootstrap = <T>() => {
             }
           })
 
+        //@ts-ignore
         result = await instance[method](...args)
         res.json(result)
       })
@@ -103,4 +119,4 @@ export const bootstrap = <T>() => {
   app.listen(3000)
 }
 
-bootstrap()
+bootstrap<AppModule>(AppModule)

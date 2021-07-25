@@ -1,4 +1,4 @@
-import { BodyDto, BodyParamIndex } from './../const'
+import { BodyDto, BodyParamIndex, ModuleOptions } from './../const'
 import 'reflect-metadata'
 import { plainToClass } from 'class-transformer'
 
@@ -73,7 +73,6 @@ export const Req = () => {
 type Options = {
   validate: Boolean
 }
-
 export const Body = (options: Options) => {
   return (target: any, key: string, index: number) => {
     if (options?.validate) {
@@ -89,5 +88,15 @@ export const Body = (options: Options) => {
       target.constructor,
       key
     )
+  }
+}
+
+export type ModuleOptions = {
+  imports?: Type<any>[]
+  controllers?: Type<any>[]
+}
+export const Module = (options: ModuleOptions) => {
+  return (target: Type<any>) => {
+    Reflect.defineMetadata(ModuleOptions, options, target)
   }
 }

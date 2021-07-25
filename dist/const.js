@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BodyDto = exports.BodyParamIndex = exports.WithBody = exports.WithReq = exports.HandlerMapping = exports.ControllerPathPrefix = exports.ClassType = void 0;
+exports.ClassType = 'class-type';
+exports.ControllerPathPrefix = 'controller-path-prefix';
+exports.HandlerMapping = 'handler-mapping';
+exports.WithReq = 'with-req';
+exports.WithBody = 'with-body';
+exports.BodyParamIndex = 'body-param-index';
+exports.BodyDto = 'body-dto';

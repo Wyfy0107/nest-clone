@@ -1,0 +1,7 @@
+export const ClassType = 'class-type'
+export const ControllerPathPrefix = 'controller-path-prefix'
+export const HandlerMapping = 'handler-mapping'
+export const WithReq = 'with-req'
+export const WithBody = 'with-body'
+export const BodyParamIndex = 'body-param-index'
+export const BodyDto = 'body-dto'
